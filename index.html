@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Xobe Password Generator</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --accent: #58a6ff;
+      --text: #c9d1d9;
+      --weak: #f85149;
+      --medium: #d29922;
+      --strong: #3fb950;
+  }
+  *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
+  .card{background:var(--card);border-radius:12px;padding:30px;max-width:420px;width:100%;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  h1{text-align:center;margin-top:0;color:var(--accent)}
+  .controls{display:grid;gap:15px;margin-bottom:20px}
+  label{display:flex;align-items:center;gap:8px;font-size:14px}
+  input[type=range]{width:100%}
+  .output{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:12px;font-family:monospace;font-size:16px;position:relative}
+  .output button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--accent);cursor:pointer;font-size:18px}
+  .strength{margin-top:12px;font-size:14px;font-weight:600}
+  .weak{color:var(--weak)} .medium{color:var(--medium)} .strong{color:var(--strong)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Xobe Password Generator</h1>
+
+  <div class="controls">
+    <label>Panjang:
+      <input type="range" min="4" max="64" value="16" id="length">
+      <span id="lenVal">16</span>
+    </label>
+
+    <label><input type="checkbox" id="upper" checked> Huruf Besar (A–Z)</label>
+    <label><input type="checkbox" id="lower" checked> Huruf Kecil (a–z)</label>
+    <label><input type="checkbox" id="number" checked> Angka (0–9)</label>
+    <label><input type="checkbox" id="symbol" checked> Simbol (!@#$...)</label>
+
+    <button id="generate" style="padding:10px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:16px;cursor:pointer">Buat Password</button>
+  </div>
+
+  <div class="output">
+    <span id="password">-</span>
+    <button id="copy" title="Salin">📋</button>
+  </div>
+  <div id="strength" class="strength">Kekuatan: -</div>
+</div>
+
+<script>
+  const $ = sel => document.querySelector(sel);
+  const lengthSlider = $('#length');
+  const lenVal       = $('#lenVal');
+  const passwordEl   = $('#password');
+  const strengthEl   = $('#strength');
+  const copyBtn      = $('#copy');
+
+  const sets = {
+    upper:  'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    lower:  'abcdefghijklmnopqrstuvwxyz',
+    number: '0123456789',
+    symbol: '!@#$%^&*()_+[]{}|;:,.<>?'
+  };
+
+  function updateLen() { lenVal.textContent = lengthSlider.value; }
+  lengthSlider.addEventListener('input', updateLen);
+  updateLen();
+
+  function generate() {
+    let pool = '';
+    ['upper','lower','number','symbol'].forEach(chk=>{
+      if($('#'+chk).checked) pool += sets[chk];
+    });
+    if(!pool) return passwordEl.textContent = '-';
+
+    let pass = '';
+    for(let i=0;i<lengthSlider.value;i++){
+      pass += pool[Math.floor(Math.random()*pool.length)];
+    }
+    passwordEl.textContent = pass;
+    evaluateStrength(pass);
+  }
+
+  function evaluateStrength(p) {
+    let score = 0;
+    if(/[a-z]/.test(p)) score += 1;
+    if(/[A-Z]/.test(p)) score += 1;
+    if(/[0-9]/.test(p)) score += 1;
+    if(/[^A-Za-z0-9]/.test(p)) score += 1;
+    score += Math.min(Math.floor(p.length/8),2); // bonus panjang
+
+    let label, cls;
+    if(score < 3)       { label = 'Lemah';      cls = 'weak'; }
+    else if(score < 5)  { label = 'Sedang';     cls = 'medium'; }
+    else                { label = 'Kuat';       cls = 'strong'; }
+
+    strengthEl.textContent = Kekuatan: ${label};
+    strengthEl.className = 'strength ' + cls;
+  }
+$('#generate').addEventListener('click', generate);
+  copyBtn.addEventListener('click', ()=>{
+    navigator.clipboard.writeText(passwordEl.textContent).then(()=>{
+      copyBtn.textContent = '✅';
+      setTimeout(()=>copyBtn.textContent='📋',1200);
+    });
+  });
+
+  // buat satu langsung
+  generate();
+</script>
+</body>
+</html>
