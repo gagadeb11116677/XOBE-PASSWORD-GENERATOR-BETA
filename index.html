@@ -13,43 +13,62 @@
       --weak: #f85149;
       --medium: #d29922;
       --strong: #3fb950;
+      --border: #30363d;
   }
   *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
   body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-  .card{background:var(--card);border-radius:12px;padding:30px;max-width:420px;width:100%;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-  h1{text-align:center;margin-top:0;color:var(--accent)}
-  .controls{display:grid;gap:15px;margin-bottom:20px}
-  label{display:flex;align-items:center;gap:8px;font-size:14px}
-  input[type=range]{width:100%}
-  .output{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:12px;font-family:monospace;font-size:16px;position:relative}
-  .output button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--accent);cursor:pointer;font-size:18px}
-  .strength{margin-top:12px;font-size:14px;font-weight:600}
-  .weak{color:var(--weak)} .medium{color:var(--medium)} .strong{color:var(--strong)}
+  .card{background:var(--card);border-radius:16px;padding:40px 30px;max-width:460px;width:100%;box-shadow:0 12px 32px rgba(0,0,0,.5);position:relative}
+  .badge{position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;font-size:.7rem;padding:3px 8px;border-radius:20px;font-weight:600}
+  h1{text-align:center;margin-top:0;color:var(--accent);font-size:1.6rem;font-weight:700}
+  .controls{display:grid;gap:16px;margin-bottom:24px}
+  label{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+  input[type=range]{width:100%;cursor:pointer}
+  input[type=checkbox]{transform:scale(1.2)}
+  .range-wrap{display:flex;align-items:center;gap:8px}
+  #lenVal{font-weight:600;color:var(--accent)}
+  button{cursor:pointer}
+  .output{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px 18px;font-family:monospace;font-size:16px;position:relative;display:flex;align-items:center}
+  .output button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:20px;margin-left:auto}
+  .strength{margin-top:12px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .bar{height:6px;border-radius:3px;background:var(--border);flex:1;overflow:hidden}
+  .bar div{height:100%;width:0;transition:.3s}
+  .weak{background:var(--weak)} .medium{background:var(--medium)} .strong{background:var(--strong)}
+  .credits{margin-top:24px;text-align:center;font-size:.75rem;color:#8b949e}
+  .generate-btn{background:linear-gradient(135deg,var(--accent),#1f6feb);border:none;border-radius:50px;padding:12px;font-size:16px;color:#fff;font-weight:600;letter-spacing:.5px;transition:.3s}
+  .generate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(88,166,255,.3)}
 </style>
 </head>
 <body>
 <div class="card">
+  <div class="badge">BETA</div>
   <h1>Xobe Password Generator</h1>
 
   <div class="controls">
-    <label>Panjang:
-      <input type="range" min="4" max="64" value="16" id="length">
-      <span id="lenVal">16</span>
-    </label>
+    <div class="range-wrap">
+      <label>Panjang:</label>
+      <input type="range" min="8" max="128" value="20" id="length">
+      <span id="lenVal">20</span>
+    </div>
 
     <label><input type="checkbox" id="upper" checked> Huruf Besar (A–Z)</label>
     <label><input type="checkbox" id="lower" checked> Huruf Kecil (a–z)</label>
     <label><input type="checkbox" id="number" checked> Angka (0–9)</label>
     <label><input type="checkbox" id="symbol" checked> Simbol (!@#$...)</label>
 
-    <button id="generate" style="padding:10px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:16px;cursor:pointer">Buat Password</button>
+    <button id="generate" class="generate-btn">Buat Password</button>
   </div>
 
   <div class="output">
     <span id="password">-</span>
-    <button id="copy" title="Salin">📋</button>
+    <button id="copy" title="Salin ke clipboard">📋</button>
   </div>
-  <div id="strength" class="strength">Kekuatan: -</div>
+
+  <div class="strength">
+    <span id="strengthLabel">Kekuatan:</span>
+    <div class="bar"><div id="strengthBar"></div></div>
+  </div>
+
+  <div class="credits">© 2024 Xobe Development</div>
 </div>
 
 <script>
@@ -57,14 +76,15 @@
   const lengthSlider = $('#length');
   const lenVal       = $('#lenVal');
   const passwordEl   = $('#password');
-  const strengthEl   = $('#strength');
+  const strengthLabel= $('#strengthLabel');
+  const strengthBar  = $('#strengthBar');
   const copyBtn      = $('#copy');
 
   const sets = {
     upper:  'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
     lower:  'abcdefghijklmnopqrstuvwxyz',
     number: '0123456789',
-    symbol: '!@#$%^&*()_+[]{}|;:,.<>?'
+    symbol: '!@#$%^&*()_+-=[]{}|;:,.<>?'
   };
 
   function updateLen() { lenVal.textContent = lengthSlider.value; }
@@ -78,9 +98,12 @@
     });
     if(!pool) return passwordEl.textContent = '-';
 
+    // stronger random
+    const arr = new Uint32Array(lengthSlider.value);
+    crypto.getRandomValues(arr);
     let pass = '';
-    for(let i=0;i<lengthSlider.value;i++){
-      pass += pool[Math.floor(Math.random()*pool.length)];
+    for(let i=0;i<arr.length;i++){
+      pass += pool[arr[i]%pool.length];
     }
     passwordEl.textContent = pass;
     evaluateStrength(pass);
@@ -91,18 +114,21 @@
     if(/[a-z]/.test(p)) score += 1;
     if(/[A-Z]/.test(p)) score += 1;
     if(/[0-9]/.test(p)) score += 1;
-    if(/[^A-Za-z0-9]/.test(p)) score += 1;
-    score += Math.min(Math.floor(p.length/8),2); // bonus panjang
+    if(/[^A-Za-z0-9]/.test(p)) score += 2;
+    score += Math.min(Math.floor(p.length/4),4);
 
-    let label, cls;
-    if(score < 3)       { label = 'Lemah';      cls = 'weak'; }
-    else if(score < 5)  { label = 'Sedang';     cls = 'medium'; }
-    else                { label = 'Kuat';       cls = 'strong'; }
+    let label, cls, width;
+    if(score < 3)       { label='Lemah';    cls='weak';   width='25%'; }
+    else if(score < 5)  { label='Sedang';   cls='medium'; width='50%'; }
+    else if(score < 7)  { label='Kuat';     cls='strong'; width='75%'; }
+    else                { label='Sangat Kuat'; cls='strong'; width='100%'; }
 
-    strengthEl.textContent = Kekuatan: ${label};
-    strengthEl.className = 'strength ' + cls;
+    strengthLabel.textContent = `Kekuatan: ${label}`;
+    strengthBar.className = cls;
+    strengthBar.style.width = width;
   }
-$('#generate').addEventListener('click', generate);
+
+  $('#generate').addEventListener('click', generate);
   copyBtn.addEventListener('click', ()=>{
     navigator.clipboard.writeText(passwordEl.textContent).then(()=>{
       copyBtn.textContent = '✅';
@@ -110,7 +136,7 @@ $('#generate').addEventListener('click', generate);
     });
   });
 
-  // buat satu langsung
+  // initial
   generate();
 </script>
 </body>
