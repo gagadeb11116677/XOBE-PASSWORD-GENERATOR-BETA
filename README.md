@@ -53,4 +53,11 @@ Informasi Tambahan
 Repositori ini masih dalam tahap awal — cocok untuk eksplorasi, belum disarankan untuk penggunaan kritikal.
 Jika butuh bantuan atau ingin menyumbang ide, silakan hubungi melalui GitHub.
 
+## 🔄 Update — Xobe Password Generator v0.1
+
+Perubahan terbaru:
+- 📦 **5 slot penyimpanan password**
+- 🛡 **Pengecekan kekuatan password secara real-time**
+
+
 Dibuat dengan ❤️ oleh XOBE DEVELOPMENT
