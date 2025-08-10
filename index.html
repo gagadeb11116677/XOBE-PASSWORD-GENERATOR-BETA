@@ -157,14 +157,17 @@
   }
 
   function pickSlot(message){
-    let list = loadSlots().map((s,i)=>`${i+1}. ${s ? s.name : '(kosong)'}`).join('\n');
-    let idx = prompt(`${message}\n\n${list}`);
-    if(!idx) return null;
-    idx = parseInt(idx,10)-1;
-    if(idx<0 || idx>=MAX_SLOT) return null;
-    return idx;
+  let slots = loadSlots();
+  let list = [];
+  for(let i=0;i<MAX_SLOT;i++){
+    list.push(`${i+1}. ${slots[i] ? slots[i].name : '(kosong)'}`);
   }
-
+  let idx = prompt(`${message}\n\n${list.join('\n')}`);
+  if(!idx) return null;
+  idx = parseInt(idx,10)-1;
+  if(idx<0 || idx>=MAX_SLOT) return null;
+  return idx;
+}
   $('#saveSlotBtn').addEventListener('click', ()=>{
     const idx = pickSlot('Pilih nomor slot untuk menyimpan:');
     if(idx===null) return;
