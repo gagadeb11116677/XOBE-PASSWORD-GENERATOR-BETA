@@ -110,13 +110,24 @@ Saved to slot: 3
 * Versi ini **belum** memiliki enkripsi storage otomatis — rencana enkripsi (mis. AES-GCM) dapat ditambahkan di rilis berikutnya.
 
 ---
+# 📜 Changelog  v0.2
 
-## 📜 Changelog — v0.1
+## ✨ Fitur Baru
+- Menambahkan **10 slot penyimpanan password** untuk memudahkan pengelolaan lebih banyak akun.
+- Menambahkan fitur **popup tampilan password** saat ingin melihat password yang tersimpan.
+- Penambahan **tombol hapus slot** untuk menghapus password yang tidak diperlukan.
+- UI diperbarui menjadi **lebih modern, rapi, dan responsif**.
 
-* 📦 Menambahkan **5 slot penyimpanan password**
-* 🛡 Menambahkan **pengecekan kekuatan password real-time**
+## 🛠 Perbaikan
+- Perbaikan bug pada proses generate password.
+- Optimalisasi kinerja saat memuat data password.
+- Penyimpanan slot kini lebih stabil dan cepat diakses.
 
----
+## 🔄 Pembaruan Lain
+- Ikon tombol diperbarui agar lebih mudah dipahami.
+- Penataan ulang tata letak agar lebih intuitif.
+- Animasi transisi pada popup untuk pengalaman yang lebih halus.
+
 
 ## 🤝 Kontribusi
 
