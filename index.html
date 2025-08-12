@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Xobe Password Generator</title>
+<title>Xobe Password Generator v0.2</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   :root {
@@ -13,38 +13,65 @@
       --weak: #f85149;
       --medium: #d29922;
       --strong: #3fb950;
+      --super: #00e5ff;
       --border: #30363d;
+      --glass: rgba(255,255,255,.05);
   }
   *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
-  body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-  .card{background:var(--card);border-radius:16px;padding:40px 30px;max-width:460px;width:100%;box-shadow:0 12px 32px rgba(0,0,0,.5)}
-  h1{text-align:center;margin-top:0;color:var(--accent);font-size:1.6rem;font-weight:700}
-  .controls{display:grid;gap:16px;margin-bottom:24px}
-  label{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
-  input[type=range]{width:100%;cursor:pointer}
-  input[type=checkbox]{transform:scale(1.2)}
-  .range-wrap{display:flex;align-items:center;gap:8px}
-  #lenVal{font-weight:600;color:var(--accent)}
+  body{margin:0;background:linear-gradient(135deg,#0d1117 0%,#161b22 50%,#0d1117 100%);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;animation:bgShift 20s ease infinite;background-size:200% 200%}
+  @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:50px 40px;max-width:500px;width:100%;box-shadow:0 25px 50px rgba(0,0,0,.6),inset 0 1px 0 var(--glass)}
+  h1{text-align:center;margin-top:0;color:var(--accent);font-size:2rem;font-weight:800;letter-spacing:1px;background:linear-gradient(135deg,var(--accent),var(--super));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .controls{display:grid;gap:20px;margin-bottom:30px}
+  label{display:flex;align-items:center;gap:12px;font-size:15px;cursor:pointer;transition:.2s}
+  label:hover{color:var(--accent)}
+  input[type=range]{width:100%;cursor:pointer;appearance:none;height:8px;border-radius:4px;background:var(--border);outline:none}
+  input[type=range]::-webkit-slider-thumb{appearance:none;height:20px;width:20px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--super));box-shadow:0 0 12px rgba(88,166,255,.5);transition:.2s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+  input[type=checkbox]{transform:scale(1.3);accent-color:var(--accent)}
+  .range-wrap{display:flex;align-items:center;gap:12px}
+  #lenVal{font-weight:700;color:var(--accent);font-size:1.1rem}
   button{cursor:pointer}
-  .output{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px 18px;font-family:monospace;font-size:16px;position:relative;display:flex;align-items:center}
-  .output button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:20px;margin-left:auto}
-  .strength{margin-top:12px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
-  .bar{height:6px;border-radius:3px;background:var(--border);flex:1;overflow:hidden}
-  .bar div{height:100%;width:0;transition:.3s}
-  .weak{background:var(--weak)} .medium{background:var(--medium)} .strong{background:var(--strong)}
-  .credits{margin-top:24px;text-align:center;font-size:.75rem;color:#8b949e}
-  .generate-btn{background:linear-gradient(135deg,var(--accent),#1f6feb);border:none;border-radius:50px;padding:12px;font-size:16px;color:#fff;font-weight:600;letter-spacing:.5px;transition:.3s}
-  .generate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(88,166,255,.3)}
+  .output{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:18px 22px;font-family:monospace;font-size:18px;position:relative;display:flex;align-items:center;transition:.3s}
+  .output:hover{border-color:var(--accent)}
+  .output button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:24px;margin-left:auto;transition:.2s}
+  .output button:hover{transform:scale(1.3)}
+  .strength{margin-top:16px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .bar{height:10px;border-radius:5px;background:var(--border);flex:1;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.5)}
+  .bar div{height:100%;width:0;transition:.4s;border-radius:5px}
+  .weak{background:linear-gradient(90deg,var(--weak),#ff6b6b)} 
+  .medium{background:linear-gradient(90deg,var(--medium),#ffa726)} 
+  .strong{background:linear-gradient(90deg,var(--strong),#66bb6a)} 
+  .super{background:linear-gradient(90deg,var(--super),#00bcd4)}
+  .credits{margin-top:30px;text-align:center;font-size:.85rem;color:#8b949e;letter-spacing:.5px}
+  .generate-btn{background:linear-gradient(135deg,var(--accent),var(--super));border:none;border-radius:50px;padding:16px;font-size:18px;color:#fff;font-weight:700;letter-spacing:.5px;transition:.3s;box-shadow:0 8px 20px rgba(88,166,255,.3)}
+  .generate-btn:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(88,166,255,.4)}
+  .generate-btn:active{transform:translateY(-1px)}
+  .slot-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .slot-btns button{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:.9rem;transition:.2s;backdrop-filter:blur(10px)}
+  .slot-btns button:hover{background:linear-gradient(135deg,var(--accent),var(--super));color:#fff;border-color:transparent;transform:translateY(-2px)}
+  .slot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:15px}
+  .slot-grid button{background:var(--glass);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:.8rem;padding:10px 4px;transition:.2s;backdrop-filter:blur(10px)}
+  .slot-grid button:hover{background:linear-gradient(135deg,var(--accent),var(--super));color:#fff;border-color:transparent}
+  .slot-grid button[data-occupied="1"]{background:linear-gradient(135deg,var(--strong),var(--super))}
+  .slot-grid button[data-occupied="1"]:hover{background:linear-gradient(135deg,var(--accent),var(--super))}
 
-  /* tombol slot */
-  .slot-btns{display:flex;gap:8px;margin-top:12px}
-  .slot-btns button{background:var(--border);border:none;border-radius:8px;padding:8px 12px;color:var(--text);font-size:.85rem;transition:.2s}
-  .slot-btns button:hover{background:var(--accent);color:#fff}
+  /* POP-UP MODAL */
+  .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:flex;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(6px)}
+  .modal-content{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px 25px;max-width:420px;width:90%;color:var(--text);box-shadow:0 25px 50px rgba(0,0,0,.6);animation:fadeIn .3s;text-align:center}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+  .modal-content h2{margin-top:0;color:var(--accent);font-size:1.4rem;font-weight:700}
+  .modal-content pre{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:1rem;word-break:break-all;white-space:pre-wrap;margin:10px 0 20px}
+  .modal-content button{border:none;border-radius:8px;padding:10px 20px;font-size:.9rem;margin:0 6px;transition:.2s}
+  .modal-content .copy-btn{background:linear-gradient(135deg,var(--accent),var(--super));color:#fff}
+  .modal-content .close-btn{background:var(--border);color:var(--text)}
+  .modal-content .close-btn:hover{background:var(--accent);color:#fff}
+  .hidden{display:none}
 </style>
 </head>
 <body>
 <div class="card">
-  <h1>Xobe Password Generator v0.1</h1>
+  <h1>Xobe Password Generator v0.2</h1>
 
   <div class="controls">
     <div class="range-wrap">
@@ -71,16 +98,29 @@
     <div class="bar"><div id="strengthBar"></div></div>
   </div>
 
-  <!-- Tombol slot -->
+  <!-- Slot action buttons -->
   <div class="slot-btns">
     <button id="saveSlotBtn">Simpan ke Slot</button>
     <button id="loadSlotBtn">Muat dari Slot</button>
+    <button id="deleteSlotBtn">Hapus Slot</button>
+  </div>
+  <div class="slot-grid" id="slotGrid"></div>
+
+  <!-- Pop-up Modal for password preview -->
+  <div id="pwModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h2>Password Tersimpan</h2>
+      <pre id="savedPwText"></pre>
+      <button id="copyPwBtn" class="copy-btn">Salin</button>
+      <button id="closePwBtn" class="close-btn">Tutup</button>
+    </div>
   </div>
 
   <div class="credits">© 2025 Xobe Development</div>
 </div>
 
 <script>
+  // Core functionality
   const $ = sel => document.querySelector(sel);
   const lengthSlider = $('#length');
   const lenVal       = $('#lenVal');
@@ -115,6 +155,7 @@
     }
     passwordEl.textContent = pass;
     evaluateStrength(pass);
+    renderSlotGrid();
   }
 
   function evaluateStrength(p) {
@@ -126,10 +167,11 @@
     score += Math.min(Math.floor(p.length/4),4);
 
     let label, cls, width;
-    if(score < 3)       { label='Lemah';    cls='weak';   width='25%'; }
-    else if(score < 5)  { label='Sedang';   cls='medium'; width='50%'; }
-    else if(score < 7)  { label='Kuat';     cls='strong'; width='75%'; }
-    else                { label='Sangat Kuat'; cls='strong'; width='100%'; }
+    if(score < 3)       { label='Lemah';    cls='weak'; width='20%'; }
+    else if(score < 5)  { label='Sedang';   cls='medium'; width='40%'; }
+    else if(score < 7)  { label='Kuat';     cls='strong'; width='70%'; }
+    else if(score < 9)  { label='Sangat Kuat'; cls='strong'; width='90%'; }
+    else                { label='Super';    cls='super'; width='100%'; }
 
     strengthLabel.textContent = `Kekuatan: ${label}`;
     strengthBar.className = cls;
@@ -144,74 +186,156 @@
     });
   });
 
-  // ---------- SLOT (5 slots) ----------
+  // --- Robust Slot System with Modal ---
   const SLOT_KEY = 'xobeSlots';
-  const MAX_SLOT = 5;
+  const MAX_SLOT = 10;
+  const pwModal = $('#pwModal');
+  const savedPwText = $('#savedPwText');
+  const copyPwBtn = $('#copyPwBtn');
+  const closePwBtn = $('#closePwBtn');
+
+  function normalizeSlots(rawSlots){
+    let arr = [];
+    if (!rawSlots) {
+      arr = Array(MAX_SLOT).fill(null);
+    } else if (!Array.isArray(rawSlots)) {
+      if (typeof rawSlots === 'string') {
+        arr = Array(MAX_SLOT).fill(null);
+        arr[0] = { name: 'Slot 1', password: rawSlots };
+      } else if (typeof rawSlots === 'object') {
+        arr = Array(MAX_SLOT).fill(null);
+        const keys = Object.keys(rawSlots);
+        for (let i = 0; i < Math.min(keys.length, MAX_SLOT); i++) {
+          const val = rawSlots[keys[i]];
+          if (val) arr[i] = (typeof val === 'string') ? { name: `Slot ${i+1}`, password: val } : val;
+        }
+      } else {
+        arr = Array(MAX_SLOT).fill(null);
+      }
+    } else {
+      arr = rawSlots.slice(0, MAX_SLOT);
+      while (arr.length < MAX_SLOT) arr.push(null);
+      for (let i = 0; i < arr.length; i++) {
+        const s = arr[i];
+        if (!s) continue;
+        if (typeof s === 'string') arr[i] = { name: `Slot ${i+1}`, password: s };
+        else if (typeof s === 'object') {
+          if (!s.name) s.name = `Slot ${i+1}`;
+          if (s.password === undefined) s.password = '-';
+        } else {
+          arr[i] = null;
+        }
+      }
+    }
+    return arr;
+  }
 
   function loadSlots(){
     const raw = localStorage.getItem(SLOT_KEY);
-    return raw ? JSON.parse(raw) : Array(MAX_SLOT).fill(null);
-  }
-  function saveSlots(slots){
-    localStorage.setItem(SLOT_KEY, JSON.stringify(slots));
+    if (!raw) return Array(MAX_SLOT).fill(null);
+    try {
+      const parsed = JSON.parse(raw);
+      return normalizeSlots(parsed);
+    } catch (e) {
+      return normalizeSlots(raw);
+    }
   }
 
-  function pickSlot(message){
-  let slots = loadSlots();
-  let list = [];
-  for(let i=0;i<MAX_SLOT;i++){
-    list.push(`${i+1}. ${slots[i] ? slots[i].name : '(kosong)'}`);
+  function saveSlots(slots){
+    const norm = normalizeSlots(slots);
+    localStorage.setItem(SLOT_KEY, JSON.stringify(norm));
   }
-  let idx = prompt(`${message}\n\n${list.join('\n')}`);
-  if(!idx) return null;
-  idx = parseInt(idx,10)-1;
-  if(idx<0 || idx>=MAX_SLOT) return null;
-  return idx;
-}
+
+  function renderSlotGrid(){
+    const grid = $('#slotGrid');
+    grid.innerHTML = '';
+    const slots = loadSlots();
+    slots.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = s && s.name ? s.name : `Slot ${i+1}`;
+      btn.dataset.occupied = s ? 1 : 0;
+      btn.title = s && s.password ? `${btn.textContent} - ${s.password}` : `Slot ${i+1} (kosong)`;
+      btn.addEventListener('click', () => handleSlotClick(i));
+      grid.appendChild(btn);
+    });
+  }
+
+  function handleSlotClick(idx){
+    const slots = loadSlots();
+    const s = slots[idx];
+    if (!s) { alert('Slot kosong.'); return; }
+    showPasswordPopup(s.password);
+  }
+
+  function showPasswordPopup(pw){
+    savedPwText.textContent = pw;
+    pwModal.classList.remove('hidden');
+  }
+
+  copyPwBtn.addEventListener('click', ()=>{
+    navigator.clipboard.writeText(savedPwText.textContent).then(()=>{
+      copyPwBtn.textContent = '✅ Tersalin';
+      setTimeout(()=>copyPwBtn.textContent='Salin',1200);
+    });
+  });
+
+  closePwBtn.addEventListener('click', ()=>pwModal.classList.add('hidden'));
+  pwModal.addEventListener('click', (e)=>{
+    if (e.target === pwModal) pwModal.classList.add('hidden');
+  });
+
+  // --- Slot action buttons ---
+  function pickSlot(message){
+    const slots = loadSlots();
+    const list = slots.map((s, i) => `${i+1}. ${s ? s.name : '(kosong)'}`).join('\n');
+    const res = prompt(`${message}\n\n${list}\n\nMasukkan nomor slot (1-${MAX_SLOT}):`);
+    if (res === null) return null;
+    const num = parseInt(res.trim(), 10);
+    if (Number.isNaN(num)) { alert('Input tidak valid'); return null; }
+    const idx = num - 1;
+    if (idx < 0 || idx >= MAX_SLOT) { alert('Nomor slot di luar jangkauan'); return null; }
+    return idx;
+  }
+
   $('#saveSlotBtn').addEventListener('click', ()=>{
     const idx = pickSlot('Pilih nomor slot untuk menyimpan:');
-    if(idx===null) return;
-
-    const name = prompt('Berikan nama untuk slot ini:', loadSlots()[idx]?.name || `Slot ${idx+1}`);
-    if(!name) return;
-
-    const data = {
-      name,
-      length: lengthSlider.value,
-      upper: $('#upper').checked,
-      lower: $('#lower').checked,
-      number: $('#number').checked,
-      symbol: $('#symbol').checked,
-      password: passwordEl.textContent
-    };
-
+    if (idx === null) return;
+    if (!passwordEl.textContent || passwordEl.textContent === '-') {
+      if (!confirm('Password belum di-generate. Buat password baru sekarang dan simpan ke slot ini? (OK = buat baru)')) return;
+      generate();
+    }
+    const currentName = loadSlots()[idx]?.name || `Slot ${idx+1}`;
+    const nameRes = prompt('Nama slot:', currentName);
+    if (nameRes === null) return;
+    const name = (nameRes.trim() === '') ? `Slot ${idx+1}` : nameRes.trim();
+    const data = { name, length: Number(lengthSlider.value), upper: $('#upper').checked, lower: $('#lower').checked, number: $('#number').checked, symbol: $('#symbol').checked, password: passwordEl.textContent };
     const slots = loadSlots();
     slots[idx] = data;
     saveSlots(slots);
-    alert(`Slot ${idx+1} tersimpan!`);
+    renderSlotGrid();
+    alert(`Slot "${name}" tersimpan!`);
   });
 
   $('#loadSlotBtn').addEventListener('click', ()=>{
     const idx = pickSlot('Pilih nomor slot untuk dimuat:');
-    if(idx===null) return;
-
+    if (idx === null) return;
     const slots = loadSlots();
     const data = slots[idx];
-    if(!data){
-      alert('Slot ini masih kosong!');
-      return;
+    if (!data || !data.password) { alert('Slot kosong atau tidak memiliki password!'); return; }
+    showPasswordPopup(data.password);
+  });
+
+  $('#deleteSlotBtn').addEventListener('click', ()=>{
+    const idx = pickSlot('Pilih nomor slot untuk dihapus:');
+    if (idx === null) return;
+    const slots = loadSlots();
+    if (!slots[idx]) { alert('Slot sudah kosong.'); return; }
+    if (confirm(`Yakin hapus slot "${slots[idx].name}"?`)){
+      slots[idx] = null;
+      saveSlots(slots);
+      renderSlotGrid();
+      alert('Slot dihapus.');
     }
-
-    lengthSlider.value = data.length;
-    $('#upper').checked   = data.upper;
-    $('#lower').checked   = data.lower;
-    $('#number').checked  = data.number;
-    $('#symbol').checked  = data.symbol;
-    updateLen();
-    passwordEl.textContent = data.password;
-    evaluateStrength(data.password);
-
-    alert(`Slot ${idx+1} dimuat:\nNama: ${data.name}\nPassword: ${data.password}`);
   });
 
   // real-time strength check
@@ -225,6 +349,7 @@
   });
 
   generate();
+  renderSlotGrid();
 </script>
 </body>
 </html>
